@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "compras-page-client-side-solution",
+    "id": "517a2a27-8234-4ea5-8a46-c18f15388e4d",
+    "version": "1.0.3.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "compras-page description"
+      },
+      "longDescription": {
+        "default": "compras-page description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Compras Page Feature",
+        "description": "Ativa a webpart Compras Page no SharePoint.",
+        "id": "127e4c70-5b3e-4462-80d6-278409e0eb26",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/compras-page.sppkg"
+  }
+}
