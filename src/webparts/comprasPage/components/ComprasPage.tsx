@@ -6,13 +6,15 @@ export default class ComprasPage extends React.Component<IComprasPageProps> {
   public render(): React.ReactElement<IComprasPageProps> {
     const {
       userDisplayName,
-      context
+      context,
+      linksJson
     } = this.props;
 
     return (
       <IntranetApp 
         userDisplayName={userDisplayName} 
         context={context}
+        linksJson={linksJson}
       />
     );
   }

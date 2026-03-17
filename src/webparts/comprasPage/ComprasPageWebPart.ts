@@ -14,6 +14,7 @@ import { IComprasPageProps } from './components/IComprasPageProps';
 
 export interface IComprasPageWebPartProps {
   description: string;
+  linksJson: string;
 }
 
 export default class ComprasPageWebPart extends BaseClientSideWebPart<IComprasPageWebPartProps> {
@@ -26,6 +27,7 @@ export default class ComprasPageWebPart extends BaseClientSideWebPart<IComprasPa
       ComprasPage,
       {
         description: this.properties.description,
+        linksJson: this.properties.linksJson,
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: Boolean(this.context.sdks.microsoftTeams),
@@ -111,6 +113,13 @@ export default class ComprasPageWebPart extends BaseClientSideWebPart<IComprasPa
               groupFields: [
                 PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel
+                }),
+                PropertyPaneTextField('linksJson', {
+                  label: 'Links da página (JSON)',
+                  multiline: true,
+                  resizable: true,
+                  rows: 16,
+                  description: 'Opcional. Sobrescreve os links padrão da página com um JSON customizado.'
                 })
               ]
             }
