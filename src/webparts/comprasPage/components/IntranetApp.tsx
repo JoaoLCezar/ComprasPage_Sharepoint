@@ -14,7 +14,6 @@ import {
   LayoutGrid,
   FileText,
   ChevronDown,
-  Archive,
   ShoppingCart,
   ExternalLink,
   Download,
@@ -183,12 +182,14 @@ const buildSharedDocumentUrl = (siteUrl: string, ...pathSegments: string[]): str
 
 const buildDefaultPageLinks = (siteUrl: string): IPageLinks => {
   const pastaArquivosComprasUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Central%20de%20Documentos/Forms/AllItems.aspx?id=%2Fsites%2Fintranet%2FCentral%20de%20Documentos%2FCompras&viewid=1f5dabfc%2D90f4%2D48d7%2Da2f7%2D73235c4c5b9b';
+  const procedimentosUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Documentos%20Compartilhados/Forms/AllItems.aspx?FolderCTID=0x0120005049CB235AA5804C97F60E1F852A595E&id=%2Fsites%2Fintranet%2FDocumentos%20Compartilhados%2F02%5FProcedimentos%5FOperacionais%2FCompras';
+  const comoSolicitarUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Videoteca%20de%20Instrues/Forms/AllItems.aspx?FolderCTID=0x012000191CE6DEFB5C0F4883C503B655EC1566&id=%2Fsites%2Fintranet%2FVideoteca%20de%20Instrues%2FCompras';
 
   return {
     quickAccess: {
-      centralArquivos: pastaArquivosComprasUrl,
-      procedimentos: buildSharedDocumentUrl(siteUrl, 'Procedimentos'),
-      comoSolicitar: buildSharedDocumentUrl(siteUrl, 'Como Solicitar')
+      centralArquivos: procedimentosUrl,
+      procedimentos: procedimentosUrl,
+      comoSolicitar: comoSolicitarUrl
     },
     dataBases: {
       verTodas: pastaArquivosComprasUrl,
@@ -493,11 +494,11 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
   const quickAccessCards = [
     {
       id: 1,
-      titulo: 'Central de Arquivos',
-      descricao: 'Repositório interno do setor',
-      url: pageLinks.quickAccess.centralArquivos,
+      titulo: 'Procedimentos',
+      descricao: 'Manuais e POPs oficiais',
+      url: pageLinks.quickAccess.procedimentos,
       destaque: true,
-      icone: Archive,
+      icone: FileSpreadsheet,
       iconWrapperClassName: 'w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 backdrop-blur-md text-cyan-300 group-hover:scale-110 transition-transform duration-300',
       iconColorClassName: 'text-white/50 group-hover:text-white',
       cardClassName: 'group relative bg-gradient-to-br from-[#0f2847] via-[#1e3a8a] to-[#162e66] p-6 rounded-2xl shadow-lg hover:shadow-blue-900/20 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-40 overflow-hidden text-left border border-[#1e3a8a]',
@@ -506,21 +507,8 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
     },
     {
       id: 2,
-      titulo: 'Procedimentos',
-      descricao: 'Manuais e POPs oficiais',
-      url: pageLinks.quickAccess.procedimentos,
-      destaque: false,
-      icone: FileSpreadsheet,
-      iconWrapperClassName: 'w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 text-blue-600 group-hover:scale-110 group-hover:bg-blue-50 transition-all duration-300',
-      iconColorClassName: '',
-      cardClassName: 'group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-slate-200 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-40 text-left',
-      titleClassName: 'font-bold text-xl text-slate-800',
-      descriptionClassName: 'text-sm text-slate-500 mt-1'
-    },
-    {
-      id: 3,
       titulo: 'Como Solicitar?',
-      descricao: 'Central de Ajuda e Suporte',
+      descricao: 'Videoteca com Videos dos formularios',
       url: pageLinks.quickAccess.comoSolicitar,
       destaque: false,
       icone: HelpCircle,
@@ -563,7 +551,6 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
 
   const sistemaGenialUrl = pageLinks.sidebar.sistemaGenial;
   const sistemaGenialDisponivel = hasDestination(sistemaGenialUrl);
-  const verTodasBasesUrl = pageLinks.dataBases.verTodas;
   const linksMaisAcessados = [
     { titulo: 'Política de Compras 2026.pdf', url: pageLinks.sidebar.maisAcessados.politicaCompras2026 },
     { titulo: 'Formulário - Novo Fornecedor.xlsx', url: pageLinks.sidebar.maisAcessados.formularioNovoFornecedor },
@@ -682,7 +669,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
             <div style={{ paddingRight: '9rem', paddingLeft: '0.25rem' }}>
               <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">Setor de Compras</h2>
               <p className="mt-3 text-sm text-slate-600 leading-relaxed" style={{ maxWidth: '52rem' }}>
-                Central de gestao de suprimentos, solicitacoes e diretrizes. Encontre aqui todos os recursos necessarios para as suas requisicoes de forma escalavel.
+                Central de gestão de suprimentos, solicitações e diretrizes. Encontre aqui todos os recursos necessários para as suas requisições de forma escalável.
               </p>
             </div>
             <div className="absolute text-slate-400" style={{ right: '2.25rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.35 }}>
@@ -695,7 +682,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
           <section className="xl:col-span-3 space-y-8">
             <div>
               <h3 className="text-xl font-extrabold text-slate-800 mb-5 tracking-tight">Acesso Rápido</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {quickAccessCards.map(card => {
                   const Icone = card.icone;
                   const abrirEmNovaAba = isExternalUrl(card.url, siteUrl);
@@ -765,14 +752,6 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
                   <Database size={22} className="mr-2 text-slate-400" />
                   Listas e bases Disponiveis
                 </h3>
-                <a
-                  href={verTodasBasesUrl}
-                  data-interception="off"
-                  className="text-sm font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors"
-                  style={{ textDecoration: 'none' }}
-                >
-                  Ver todas
-                </a>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
