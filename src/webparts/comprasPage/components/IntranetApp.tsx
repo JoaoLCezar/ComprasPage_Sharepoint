@@ -182,12 +182,13 @@ const buildSharedDocumentUrl = (siteUrl: string, ...pathSegments: string[]): str
 
 const buildDefaultPageLinks = (siteUrl: string): IPageLinks => {
   const pastaArquivosComprasUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Central%20de%20Documentos/Forms/AllItems.aspx?id=%2Fsites%2Fintranet%2FCentral%20de%20Documentos%2FCompras&viewid=1f5dabfc%2D90f4%2D48d7%2Da2f7%2D73235c4c5b9b';
-  const procedimentosUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Documentos%20Compartilhados/Forms/AllItems.aspx?FolderCTID=0x0120005049CB235AA5804C97F60E1F852A595E&id=%2Fsites%2Fintranet%2FDocumentos%20Compartilhados%2F02%5FProcedimentos%5FOperacionais%2FCompras';
-  const comoSolicitarUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Videoteca%20de%20Instrues/Forms/AllItems.aspx?FolderCTID=0x012000191CE6DEFB5C0F4883C503B655EC1566&id=%2Fsites%2Fintranet%2FVideoteca%20de%20Instrues%2FCompras';
+  const procedimentosUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgATG-bSjOcrR71vcOj99xGBAUxqPYmaV8C9tHrX8pftqTY?e=u0H1e5';
+  const manuaisUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgAw2rEjCp0pTLoQic2SBDurAZ9odTm8XswZZdbltJRbKMc?e=st9zkv';
+  const comoSolicitarUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgB9hqDLk3SzT6j7tSOYfzsfAZrlRVmDckTsP9HNzDMt5qs?e=fphWGv';
 
   return {
     quickAccess: {
-      centralArquivos: procedimentosUrl,
+      centralArquivos: manuaisUrl,
       procedimentos: procedimentosUrl,
       comoSolicitar: comoSolicitarUrl
     },
@@ -494,8 +495,8 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
   const quickAccessCards = [
     {
       id: 1,
-      titulo: 'Procedimentos',
-      descricao: 'Manuais e POPs oficiais',
+      titulo: 'POP',
+      descricao: 'Procedimentos operacionais padronizados',
       url: pageLinks.quickAccess.procedimentos,
       destaque: true,
       icone: FileSpreadsheet,
@@ -507,11 +508,24 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
     },
     {
       id: 2,
-      titulo: 'Como Solicitar?',
-      descricao: 'Videoteca com Videos dos formularios',
+      titulo: 'Manuais',
+      descricao: 'Documentação e guias do setor',
+      url: pageLinks.quickAccess.centralArquivos,
+      destaque: false,
+      icone: FileText,
+      iconWrapperClassName: 'w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 text-blue-600 group-hover:scale-110 group-hover:bg-blue-50 transition-all duration-300',
+      iconColorClassName: '',
+      cardClassName: 'group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-slate-200 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-40 text-left',
+      titleClassName: 'font-bold text-xl text-slate-800',
+      descriptionClassName: 'text-sm text-slate-500 mt-1'
+    },
+    {
+      id: 3,
+      titulo: 'Videoteca',
+      descricao: 'Vídeos e orientações para solicitações',
       url: pageLinks.quickAccess.comoSolicitar,
       destaque: false,
-      icone: HelpCircle,
+      icone: Video,
       iconWrapperClassName: 'w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 text-emerald-600 group-hover:scale-110 group-hover:bg-emerald-50 transition-all duration-300',
       iconColorClassName: '',
       cardClassName: 'group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-slate-200 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-40 text-left',
@@ -669,7 +683,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
             <div style={{ paddingRight: '9rem', paddingLeft: '0.25rem' }}>
               <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">Setor de Compras</h2>
               <p className="mt-3 text-sm text-slate-600 leading-relaxed" style={{ maxWidth: '52rem' }}>
-                Central de gestão de suprimentos, solicitações e diretrizes. Encontre aqui todos os recursos necessários para as suas requisições de forma escalável.
+                Central de gestão de Compras, solicitações e diretrizes. Encontre aqui todos os recursos necessários para as suas requisições de forma escalável.
               </p>
             </div>
             <div className="absolute text-slate-400" style={{ right: '2.25rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.35 }}>
@@ -682,7 +696,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
           <section className="xl:col-span-3 space-y-8">
             <div>
               <h3 className="text-xl font-extrabold text-slate-800 mb-5 tracking-tight">Acesso Rápido</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {quickAccessCards.map(card => {
                   const Icone = card.icone;
                   const abrirEmNovaAba = isExternalUrl(card.url, siteUrl);
