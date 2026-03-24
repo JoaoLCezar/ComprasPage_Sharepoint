@@ -964,7 +964,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
           </div>
 
           <div style={{ textAlign: 'right', color: '#64748b' }}>
-            <p style={{ margin: 0, fontSize: '0.86rem', fontWeight: 600 }}>© 2026 NR Gourmet Corporate</p>
+            <p style={{ margin: 0, fontSize: '0.86rem', fontWeight: 600 }}>© 2026 NR Gourmet</p>
             <p style={{ margin: 0, fontSize: '0.78rem', fontStyle: 'italic' }}>Centro de Excelência - João Cezar</p>
           </div>
         </div>
