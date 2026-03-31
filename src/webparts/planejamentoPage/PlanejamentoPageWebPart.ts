@@ -8,23 +8,23 @@ import {
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
-import * as strings from 'ComprasPageWebPartStrings';
-import ComprasPage from './components/ComprasPage';
-import { IComprasPageProps } from './components/IComprasPageProps';
+import * as strings from 'PlanejamentoPageWebPartStrings';
+import PlanejamentoPage from './components/PlanejamentoPage';
+import { IPlanejamentoPageProps } from './components/IPlanejamentoPageProps';
 
-export interface IComprasPageWebPartProps {
+export interface IPlanejamentoPageWebPartProps {
   description: string;
   linksJson: string;
 }
 
-export default class ComprasPageWebPart extends BaseClientSideWebPart<IComprasPageWebPartProps> {
+export default class PlanejamentoPageWebPart extends BaseClientSideWebPart<IPlanejamentoPageWebPartProps> {
 
   private _isDarkTheme = false;
   private _environmentMessage = '';
 
   public render(): void {
-    const element: React.ReactElement<IComprasPageProps> = React.createElement(
-      ComprasPage,
+    const element: React.ReactElement<IPlanejamentoPageProps> = React.createElement(
+      PlanejamentoPage,
       {
         description: this.properties.description,
         linksJson: this.properties.linksJson,

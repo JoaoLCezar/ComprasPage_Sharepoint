@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "compras-page-client-side-solution",
-    "id": "517a2a27-8234-4ea5-8a46-c18f15388e4d",
+    "name": "planejamento-page-client-side-solution",
+    "id": "7857421e-9dfb-4042-9874-d509cc7047f0",
     "version": "1.0.3.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
@@ -16,10 +16,10 @@
     },
     "metadata": {
       "shortDescription": {
-        "default": "compras-page description"
+        "default": "planejamento-page description"
       },
       "longDescription": {
-        "default": "compras-page description"
+        "default": "planejamento-page description"
       },
       "screenshotPaths": [],
       "videoUrl": "",
@@ -27,14 +27,14 @@
     },
     "features": [
       {
-        "title": "Compras Page Feature",
-        "description": "Ativa a webpart Compras Page no SharePoint.",
-        "id": "127e4c70-5b3e-4462-80d6-278409e0eb26",
+        "title": "Planejamento Page Feature",
+        "description": "Ativa a webpart Planejamento Page no SharePoint.",
+        "id": "fe6cc015-830a-4f11-ba43-662b4c4295d2",
         "version": "1.0.0.0"
       }
     ]
   },
   "paths": {
-    "zippedPackage": "solution/compras-page.sppkg"
+    "zippedPackage": "solution/planejamento-page.sppkg"
   }
 }

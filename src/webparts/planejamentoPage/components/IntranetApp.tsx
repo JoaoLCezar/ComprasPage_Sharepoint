@@ -14,7 +14,7 @@ import {
   LayoutGrid,
   FileText,
   ChevronDown,
-  ShoppingCart,
+  Target,
   ExternalLink,
   Download,
   PencilLine,
@@ -675,19 +675,19 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
               Início
             </a>
             <ChevronRight size={14} className="opacity-50" />
-            <span className="text-blue-700 bg-blue-100/50 border border-blue-200 px-3 py-1 rounded-lg font-semibold">Compras</span>
+            <span className="text-blue-700 bg-blue-100/50 border border-blue-200 px-3 py-1 rounded-lg font-semibold">Planejamento</span>
           </div>
 
           <div className="relative overflow-hidden rounded-2xl border border-slate-300 bg-slate-100 px-6 shadow-sm" style={{ paddingTop: '1.6rem', paddingBottom: '1.6rem' }}>
             <div className="absolute left-0 bg-blue-700" style={{ top: '0.85rem', bottom: '0.85rem', width: '0.5rem', borderTopRightRadius: '9999px', borderBottomRightRadius: '9999px' }} />
             <div style={{ paddingRight: '9rem', paddingLeft: '0.25rem' }}>
-              <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">Setor de Compras</h2>
+              <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">Setor de Planejamento</h2>
               <p className="mt-3 text-sm text-slate-600 leading-relaxed" style={{ maxWidth: '52rem' }}>
-                Central de gestão de Compras, solicitações e diretrizes. Encontre aqui todos os recursos necessários para as suas requisições de forma escalável.
-              </p>
+                Central de Gestão de Planejamento. Processos, diretrizes corporativas e recursos estratégicos em um único local para garantir fluxos ágeis e padronizados.
+              </p>  
             </div>
-            <div className="absolute text-slate-400" style={{ right: '2.25rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.35 }}>
-              <ShoppingCart size={84} strokeWidth={1.5} />
+            <div className="absolute text-slate-600" style={{ right: '2.25rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.45 }}>
+              <Target size={100} strokeWidth={1.8} />
             </div>
           </div>
         </header>

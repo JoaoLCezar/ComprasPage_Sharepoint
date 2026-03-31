@@ -1,4 +1,4 @@
-declare interface IComprasPageWebPartStrings {
+declare interface IPlanejamentoPageWebPartStrings {
   PropertyPaneDescription: string;
   BasicGroupName: string;
   DescriptionFieldLabel: string;
@@ -13,7 +13,7 @@ declare interface IComprasPageWebPartStrings {
   UnknownEnvironment: string;
 }
 
-declare module 'ComprasPageWebPartStrings' {
-  const strings: IComprasPageWebPartStrings;
+declare module 'PlanejamentoPageWebPartStrings' {
+  const strings: IPlanejamentoPageWebPartStrings;
   export = strings;
 }

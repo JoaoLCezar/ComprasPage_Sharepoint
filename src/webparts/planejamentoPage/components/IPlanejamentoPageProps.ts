@@ -1,6 +1,6 @@
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 
-export interface IComprasPageProps {
+export interface IPlanejamentoPageProps {
   description: string;
   linksJson: string;
   isDarkTheme: boolean;

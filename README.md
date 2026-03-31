@@ -1,10 +1,10 @@
-# ComprasPage_Sharepoint
+# PlanejamentoPage_Sharepoint
 
-Web Part SPFx da area de Compras para a intranet da NR Gourmet.
+Web Part SPFx da area de Planejamento para a intranet da NR Gourmet.
 
 ## Visao Geral
 
-Este projeto implementa uma pagina de Compras com:
+Este projeto implementa uma pagina de Planejamento com:
 
 - Cards de Acesso Rapido
 - Listas e bases disponiveis
@@ -12,7 +12,7 @@ Este projeto implementa uma pagina de Compras com:
 - Secao Mais Acessados (pode ser exibida/ocultada por flag)
 - Navegacao com links configuraveis
 
-O componente principal esta em `src/webparts/comprasPage/components/IntranetApp.tsx`.
+O componente principal esta em `src/webparts/planejamentoPage/components/IntranetApp.tsx`.
 
 ## Tecnologias
 
@@ -59,14 +59,14 @@ gulp package-solution --ship
 
 ## Estrutura Relevante
 
-- `src/webparts/comprasPage/ComprasPageWebPart.ts`
+- `src/webparts/planejamentoPage/PlanejamentoPageWebPart.ts`
 	- Registro da Web Part
 	- Property Pane (inclui `linksJson`)
-- `src/webparts/comprasPage/components/ComprasPage.tsx`
+- `src/webparts/planejamentoPage/components/PlanejamentoPage.tsx`
 	- Wrapper que repassa props para o app
-- `src/webparts/comprasPage/components/IComprasPageProps.ts`
+- `src/webparts/planejamentoPage/components/IPlanejamentoPageProps.ts`
 	- Tipagem das props
-- `src/webparts/comprasPage/components/IntranetApp.tsx`
+- `src/webparts/planejamentoPage/components/IntranetApp.tsx`
 	- UI principal, regras de links e navegacao
 
 ## Configuracao de Links (`linksJson`)
