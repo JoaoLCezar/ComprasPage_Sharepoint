@@ -12,6 +12,23 @@ import * as strings from 'PlanejamentoPageWebPartStrings';
 import PlanejamentoPage from './components/PlanejamentoPage';
 import { IPlanejamentoPageProps } from './components/IPlanejamentoPageProps';
 
+const performanceApi = (typeof window !== 'undefined' ? window.performance : undefined) as
+  | (Performance & {
+      clearMarks?: (markName?: string) => void;
+      clearMeasures?: (measureName?: string) => void;
+    })
+  | undefined;
+
+if (performanceApi) {
+  if (typeof performanceApi.clearMarks !== 'function') {
+    performanceApi.clearMarks = () => undefined;
+  }
+
+  if (typeof performanceApi.clearMeasures !== 'function') {
+    performanceApi.clearMeasures = () => undefined;
+  }
+}
+
 export interface IPlanejamentoPageWebPartProps {
   description: string;
   linksJson: string;

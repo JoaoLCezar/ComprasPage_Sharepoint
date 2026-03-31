@@ -15,16 +15,19 @@ import {
   FileText,
   ChevronDown,
   Target,
+  Users2,
+  Mail,
+  MessageSquare,
   ExternalLink,
-  Download,
   PencilLine,
   Maximize2,
   Minimize2,
-  type LucideIcon
+  type LucideIcon,
+  LayersIcon
 } from 'lucide-react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { SPPermission } from '@microsoft/sp-page-context';
-import { SPHttpClient } from '@microsoft/sp-http';
+import { MSGraphClientV3, SPHttpClient } from '@microsoft/sp-http';
 import logoNRGourmet from '../assets/nr-gourmet-logo.png';
 import './IntranetApp.scss';
 
@@ -43,7 +46,7 @@ interface IPageLinks {
   dataBases: {
     verTodas: string;
     responsaveisCategoria: string;
-    solicitacoesCompras: string;
+    pedidoExtra: string;
     contratosFornecedores: string;
     catalogoProdutos: string;
   };
@@ -87,9 +90,26 @@ interface IMenuItem {
   ativo: boolean;
 }
 
+interface IEquipeMembro {
+  id: string;
+  nome: string;
+  cargo: string;
+  email: string;
+}
+
+interface IGraphUser {
+  id?: string;
+  displayName?: string;
+  jobTitle?: string;
+  department?: string;
+  mail?: string;
+  userPrincipalName?: string;
+}
+
 const MENU_LIST_TITLE = 'INTRA-Navbar';
 const DROPDOWN_HIDE_DELAY_MS = 350;
-const LEFT_RAIL_STORAGE_KEY = 'compras:left-rail-hidden';
+const LEFT_RAIL_STORAGE_KEY = 'planejamento:left-rail-hidden';
+const PLANEJAMENTO_DEPARTMENT = 'Planejamento';
 
 const normalize = (value: string): string => value.trim().toLowerCase();
 
@@ -181,10 +201,10 @@ const buildSharedDocumentUrl = (siteUrl: string, ...pathSegments: string[]): str
 };
 
 const buildDefaultPageLinks = (siteUrl: string): IPageLinks => {
-  const pastaArquivosComprasUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Central%20de%20Documentos/Forms/AllItems.aspx?id=%2Fsites%2Fintranet%2FCentral%20de%20Documentos%2FCompras&viewid=1f5dabfc%2D90f4%2D48d7%2Da2f7%2D73235c4c5b9b';
-  const procedimentosUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgATG-bSjOcrR71vcOj99xGBAUxqPYmaV8C9tHrX8pftqTY?e=u0H1e5';
-  const manuaisUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgAw2rEjCp0pTLoQic2SBDurAZ9odTm8XswZZdbltJRbKMc?e=st9zkv';
-  const comoSolicitarUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgB9hqDLk3SzT6j7tSOYfzsfAZrlRVmDckTsP9HNzDMt5qs?e=fphWGv';
+  const pastaArquivosComprasUrl = 'https://nrgourmet.sharepoint.com/sites/intranet/Central%20de%20Documentos/Forms/AllItems.aspx?id=%2Fsites%2Fintranet%2FCentral%20de%20Documentos%2FPlanejamento&viewid=1f5dabfc%2D90f4%2D48d7%2Da2f7%2D73235c4c5b9b';
+  const procedimentosUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgA60hvtrm05Qo_F0uZgz8c1ASVAraKlZAsiIzBoBuCMoaw?e=wxK8XP';
+  const manuaisUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgAh_k4ogqKOTKMas14VrMgnAe0LP8n8gNoXpCH6GUtxetM?e=KaqK1R';
+  const comoSolicitarUrl = 'https://nrgourmet.sharepoint.com/:f:/s/intranet/IgCAC3m-fyGgQJHAsH9btwNeATOLWmCT-ISgCXHm8K7g6ro?e=BxpgxE';
 
   return {
     quickAccess: {
@@ -194,7 +214,7 @@ const buildDefaultPageLinks = (siteUrl: string): IPageLinks => {
     },
     dataBases: {
       verTodas: pastaArquivosComprasUrl,
-      solicitacoesCompras: buildListAllItemsUrl(siteUrl, 'Solicitao de Compras'),
+      pedidoExtra: buildListAllItemsUrl(siteUrl, 'Pedido Extra'),
       responsaveisCategoria: buildListAllItemsUrl(siteUrl, 'COMResponsaveis_Por_Categoria_De_Compra'),
       contratosFornecedores: buildListAllItemsUrl(siteUrl, 'Contratos e Fornecedores'),
       catalogoProdutos: buildListAllItemsUrl(siteUrl, 'Catálogo de Produtos')
@@ -358,6 +378,9 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
 
     return true;
   });
+  const [equipePlanejamento, setEquipePlanejamento] = React.useState<IEquipeMembro[]>([]);
+  const [carregandoEquipe, setCarregandoEquipe] = React.useState<boolean>(true);
+  const [erroEquipe, setErroEquipe] = React.useState<string>('');
   const hideDropdownTimeoutRef = React.useRef<number | null>(null);
 
   const siteUrl = context.pageContext.web.absoluteUrl;
@@ -432,7 +455,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
   }, []);
 
   React.useEffect(() => {
-    document.body.classList.toggle('compras-left-rail-hidden', leftRailHidden);
+    document.body.classList.toggle('planejamento-left-rail-hidden', leftRailHidden);
 
     try {
       window.localStorage.setItem(LEFT_RAIL_STORAGE_KEY, leftRailHidden ? '1' : '0');
@@ -441,7 +464,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
     }
 
     return () => {
-      document.body.classList.remove('compras-left-rail-hidden');
+      document.body.classList.remove('planejamento-left-rail-hidden');
     };
   }, [leftRailHidden]);
 
@@ -492,6 +515,58 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
     void loadMenu();
   }, [context]);
 
+  React.useEffect(() => {
+    let ativo = true;
+
+    const carregarEquipePlanejamento = async (): Promise<void> => {
+      setCarregandoEquipe(true);
+      setErroEquipe('');
+
+      try {
+        const graphClient: MSGraphClientV3 = await context.msGraphClientFactory.getClient('3');
+        const response = await graphClient
+          .api('/users')
+          .version('v1.0')
+          .select('id,displayName,jobTitle,department,mail,userPrincipalName')
+          .filter(`department eq '${PLANEJAMENTO_DEPARTMENT}'`)
+          .top(8)
+          .get() as { value?: IGraphUser[] };
+
+        const membros = (response.value || [])
+          .filter(user => Boolean(user.displayName))
+          .map((user): IEquipeMembro => ({
+            id: user.id || user.userPrincipalName || user.displayName || `${Date.now()}`,
+            nome: user.displayName || 'Sem nome',
+            cargo: user.jobTitle || 'Cargo não informado',
+            email: user.mail || user.userPrincipalName || ''
+          }))
+          .sort((a, b) => a.nome.localeCompare(b.nome));
+
+        if (!ativo) {
+          return;
+        }
+
+        setEquipePlanejamento(membros);
+      } catch {
+        if (!ativo) {
+          return;
+        }
+
+        setErroEquipe('Não foi possível carregar a equipe de Planejamento no organograma Microsoft.');
+      } finally {
+        if (ativo) {
+          setCarregandoEquipe(false);
+        }
+      }
+    };
+
+    void carregarEquipePlanejamento();
+
+    return () => {
+      ativo = false;
+    };
+  }, [context]);
+
   const quickAccessCards = [
     {
       id: 1,
@@ -537,10 +612,10 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
   const basesDeDados = [
     {
       id: 1,
-      titulo: 'Chamados de Compras',
-      url: pageLinks.dataBases.solicitacoesCompras,
-      descricao: 'Painel com todas as Ordens de Compra (OCs), status de aprovação e histórico detalhado.',
-      icone: FolderKanban,
+      titulo: 'Pedido Extra',
+      url: pageLinks.dataBases.pedidoExtra,
+      descricao: 'Painel de Pedidos Extras. Gerenciamento completo de solicitações, indicadores de aprovação por nível e histórico de atualizações em tempo real.',
+      icone: LayersIcon,
       cor: 'text-blue-600',
       bg: 'bg-blue-50',
       border: 'group-hover:border-blue-300',
@@ -548,32 +623,14 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
       registros: '1.248',
       ultimaAtualizacao: 'Hoje, 10:30'
     },
-    {
-      id: 2,
-      titulo: 'Responsáveis por Categoria',
-      url: pageLinks.dataBases.responsaveisCategoria,
-      descricao: 'Matriz operacional de compradores e analistas responsáveis por cada categoria.',
-      icone: Users,
-      cor: 'text-indigo-600',
-      bg: 'bg-indigo-50',
-      border: 'group-hover:border-indigo-300',
-      shadow: 'group-hover:shadow-indigo-500/10',
-      registros: '42',
-      ultimaAtualizacao: 'Há 2 dias'
-    }
+    
   ];
 
   const sistemaGenialUrl = pageLinks.sidebar.sistemaGenial;
   const sistemaGenialDisponivel = hasDestination(sistemaGenialUrl);
-  const linksMaisAcessados = [
-    { titulo: 'Política de Compras 2026.pdf', url: pageLinks.sidebar.maisAcessados.politicaCompras2026 },
-    { titulo: 'Formulário - Novo Fornecedor.xlsx', url: pageLinks.sidebar.maisAcessados.formularioNovoFornecedor },
-    { titulo: 'Tabela de SLAs por Categoria.pdf', url: pageLinks.sidebar.maisAcessados.tabelaSlasCategoria }
-  ];
-  const mostrarItensMaisAcessados = false;
 
   return (
-    <div className="compras-page min-h-screen bg-slate-50 font-sans text-slate-800">
+    <div className="planejamento-page min-h-screen bg-slate-50 font-sans text-slate-800">
       <div className="navbarHost">
         <nav className="navigationWrapper">
           <div className="logo" onClick={() => navegarPara(homeUrl)}>
@@ -590,6 +647,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
 
                   const Icone = item.icone as React.FC<{ size: number }>;
                 if (item.tipo === 'Dropdown') {
+                  const isSetores = item.titulo.trim().toLowerCase() === 'setores';
                   return (
                     <li
                       key={item.id}
@@ -597,7 +655,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
                       onMouseEnter={() => openDropdown(item.id)}
                       onMouseLeave={closeDropdownWithDelay}
                     >
-                      <button className={openDropdownId === item.id || item.ativo ? 'active' : ''}>
+                      <button className={openDropdownId === item.id || item.ativo || isSetores ? 'active' : ''}>
                         <Icone size={14} />
                         <span>{item.titulo}</span>
                         <ChevronDown
@@ -659,7 +717,7 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
           </div>
         </nav>
         {menuError && (
-          <div className="compras-page-menu-feedback">{menuError}</div>
+          <div className="planejamento-page-menu-feedback">{menuError}</div>
         )}
       </div>
 
@@ -819,6 +877,81 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
                 })}
               </div>
             </div>
+
+            <section className="team-section">
+              <div className="team-heading">
+                <h3 className="team-title">
+                  <Users2 size={26} />
+                  Conheça a Equipe
+                </h3>
+                <p className="team-subtitle">Especialistas prontos para apoiar a sua unidade.</p>
+              </div>
+
+              {carregandoEquipe && (
+                <p className="team-message">Carregando equipe...</p>
+              )}
+
+              {!carregandoEquipe && erroEquipe && (
+                <p className="team-message team-message-error">{erroEquipe}</p>
+              )}
+
+              {!carregandoEquipe && !erroEquipe && equipePlanejamento.length === 0 && (
+                <p className="team-message">Nenhum colaborador encontrado para o setor de Planejamento.</p>
+              )}
+
+              {!carregandoEquipe && !erroEquipe && equipePlanejamento.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 team-grid">
+                  {equipePlanejamento.map((membro) => {
+                    const iniciais = membro.nome
+                      .split(' ')
+                      .filter(Boolean)
+                      .slice(0, 2)
+                      .map(parte => parte[0]?.toUpperCase() || '')
+                      .join('');
+
+                    return (
+                      <article key={membro.id} className="team-card">
+                        <div className="team-identity">
+                          <div className="team-avatar">
+                            {iniciais}
+                          </div>
+                          <div className="team-person-info">
+                            <h4>{membro.nome}</h4>
+                            <p>{membro.cargo}</p>
+                          </div>
+                        </div>
+
+                        <div className="team-actions">
+                          {membro.email && (
+                            <a
+                              href={`mailto:${membro.email}`}
+                              title="Enviar e-mail"
+                              aria-label="Enviar e-mail"
+                              className="team-action-btn"
+                            >
+                              <Mail size={12} />
+                            </a>
+                          )}
+
+                          {membro.email && (
+                            <a
+                              href={`https://teams.microsoft.com/l/chat/0/0?users=${encodeURIComponent(membro.email)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Chamar no Teams"
+                              aria-label="Chamar no Teams"
+                              className="team-action-btn"
+                            >
+                              <MessageSquare size={12} />
+                            </a>
+                          )}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
           </section>
 
           <aside className="xl:col-span-1 space-y-4" style={{ marginTop: '3.05rem' }}>
@@ -874,57 +1007,9 @@ const IntranetApp: React.FC<IIntranetAppProps> = ({ context, linksJson }) => {
               )}
             </div>
 
-            <div
-              style={{
-                background: '#ffffff',
-                border: '1px solid #d8e0ea',
-                borderRadius: '16px',
-                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
-                padding: '1.1rem 1.25rem'
-              }}
-            >
-              <h4
-                style={{
-                  margin: '0 0 0.75rem 0',
-                  fontSize: '0.9rem',
-                  lineHeight: 1.15,
-                  fontWeight: 800,
-                  letterSpacing: '0.03em',
-                  textTransform: 'uppercase',
-                  color: '#0f2747'
-                }}
-              >
-                Mais Acessados
-              </h4>
-              <div>
-                {mostrarItensMaisAcessados && linksMaisAcessados.map(link => (
-                  <a
-                    key={link.titulo}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-interception="off"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.55rem',
-                      textDecoration: 'none',
-                      color: '#1f3b63',
-                      fontSize: '0.78rem',
-                      fontWeight: 500,
-                      lineHeight: 1.35,
-                      padding: '0.2rem 0',
-                      marginBottom: '0.35rem'
-                    }}
-                  >
-                    <Download size={14} color="#97a6bc" strokeWidth={2} />
-                    <span>{link.titulo}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
           </aside>
         </div>
+
       </main>
 
       <footer
